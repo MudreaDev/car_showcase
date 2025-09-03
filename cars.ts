@@ -1,0 +1,72 @@
+export const mockCars = [
+  {
+    city_mpg: 32,
+    class: "compact car",
+    combination_mpg: 35,
+    cylinders: 4,
+    displacement: 1.8,
+    drive: "fwd",
+    fuel_type: "gas",
+    highway_mpg: 41,
+    make: "toyota",
+    model: "corolla",
+    transmission: "a",
+    year: 2022
+  },
+  {
+    city_mpg: 30,
+    class: "compact car", 
+    combination_mpg: 33,
+    cylinders: 4,
+    displacement: 1.8,
+    drive: "fwd",
+    fuel_type: "gas",
+    highway_mpg: 38,
+    make: "toyota",
+    model: "corolla",
+    transmission: "m",
+    year: 2021
+  },
+  {
+    city_mpg: 28,
+    class: "compact car",
+    combination_mpg: 31,
+    cylinders: 4,
+    displacement: 1.8,
+    drive: "fwd",
+    fuel_type: "gas",
+    highway_mpg: 36,
+    make: "toyota",
+    model: "corolla",
+    transmission: "a",
+    year: 2020
+  },
+  {
+    city_mpg: 31,
+    class: "compact car",
+    combination_mpg: 34,
+    cylinders: 4,
+    displacement: 1.8,
+    drive: "fwd",
+    fuel_type: "gas",
+    highway_mpg: 40,
+    make: "toyota",
+    model: "corolla",
+    transmission: "m",
+    year: 2023
+  },
+  {
+    city_mpg: 29,
+    class: "compact car",
+    combination_mpg: 32,
+    cylinders: 4,
+    displacement: 1.8,
+    drive: "fwd",
+    fuel_type: "gas",
+    highway_mpg: 37,
+    make: "toyota",
+    model: "corolla",
+    transmission: "a",
+    year: 2019
+  }
+];
