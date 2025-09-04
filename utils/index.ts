@@ -1,73 +1,83 @@
-import { CarProps, FilterProps } from '@/types';
+import { CarProps, FilterProps } from "@/types";
 
 export async function fetchCars(filters: FilterProps) {
   const { manufacturer, year, model, limit, fuel_type } = filters;
-  
-  // Construiește URL-ul cu parametrii
-  const params = new URLSearchParams();
-  if (manufacturer && manufacturer !== '') params.append('manufacturer', manufacturer);
-  if (year && year !== 2025) params.append('year', year.toString());
-  if (model && model !== '') params.append('model', model);
-  if (limit && limit > 0) params.append('limit', limit.toString());
-  if (fuel_type && fuel_type !== '') params.append('fuel', fuel_type);
-  
-  try {
-    const response = await fetch(`http://localhost:3001/api/cars?${params.toString()}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error('Error fetching cars:', error);
-    return [];
+
+  const response = await fetch(
+    "https://68ba11ff6aaf059a5b596501.mockapi.io/api/v1/cars/cars"
+  );
+
+  let result: CarProps[] = await response.json();
+  console.log(result);
+  console.log(filters);
+
+  // aplicăm filtrările manual
+  if (manufacturer) {
+    result = result.filter((car) =>
+      car.make.toLowerCase() === manufacturer.toLowerCase()
+    );
   }
+  if (model) {
+    result = result.filter((car) =>
+      car.model.toLowerCase() === model.toLowerCase()
+    );
+  }
+
+  if (year && year !== 0) {
+    result = result.filter((car) => car.year === Number(year));
+  }
+
+  if (fuel_type && fuel_type !== '') {
+    result = result.filter((car) =>
+      car.fuel_type.toLowerCase() === fuel_type.toLowerCase()
+    );
+  }
+
+  if (limit) {
+    result = result.slice(0, Number(limit));
+  }
+
+  return result;
 }
+
+
 export const calculateCarRent = (city_mpg: number, year: number) => {
-  const basePricePerDay = 50; // Base rental price per day in dollars
-  const mileageFactor = 0.1; // Additional rate per mile driven
-  const ageFactor = 0.05; // Additional rate per year of vehicle age
+    const basePricePerDay = 50; // Base rental price per day in dollars
+    const mileageFactor = 0.1; // Additional rate per mile driven
+    const ageFactor = 0.05; // Additional rate per year of vehicle age
+  
+    // Calculate additional rate based on mileage and age
+    const mileageRate = city_mpg * mileageFactor;
+    const ageRate = (new Date().getFullYear() - year) * ageFactor;
+  
+    // Calculate total rental rate per day
+    const rentalRatePerDay = basePricePerDay + mileageRate + ageRate;
+  
+    return rentalRatePerDay.toFixed(0);
+  };
 
-  const mileageRate = city_mpg * mileageFactor;
-  const ageRate = (new Date().getFullYear() - year) * ageFactor;
+export const generateCarImageUrl = (car: CarProps, angle? : string) => {
+    //key...
+    const url = new URL("https://cdn.imagin.studio/getimage");
+    const {make, year, model} = car;
+    url.searchParams.append('customer', 'hrjavascript-mastery');
 
-  const rentalRatePerDay = basePricePerDay + mileageRate + ageRate;
+    url.searchParams.append('make', make);
+    url.searchParams.append('modelFamily', model.split(" ")[0]);
+    url.searchParams.append('zoomType', 'fullscreen');
+    url.searchParams.append('modelYear', `${year}`);
+    url.searchParams.append('angle', `${angle}`);
 
-  return rentalRatePerDay.toFixed(0);
-};
+    return `${url}`;
+
+}
 
 export const updateSearchParams = (type: string, value: string) => {
-  const searchParams = new URLSearchParams(window.location.search);
+    const searchParams = new URLSearchParams(window.location.search);
   
-  searchParams.set(type, value);
-  
-  const newPathname = `${window.location.pathname}?${searchParams.toString()}`;
-  
-  return newPathname;
-};
-
-export const deleteSearchParams = (type: string) => {
-  const newSearchParams = new URLSearchParams(window.location.search);
-  
-  newSearchParams.delete(type.toLowerCase());
-  
-  const newPathname = `${window.location.pathname}?${newSearchParams.toString()}`;
-  
-  return newPathname;
-};
-
-export const generateCarImageUrl = (car: CarProps, angle?: string) => {
-  const url = new URL('https://cdn.imagin.studio/getimage');
-  const { make, model, year } = car;
-  
-  url.searchParams.append('customer', 'hrjavascript-mastery');
-  url.searchParams.append('make', make);
-  url.searchParams.append('modelFamily', model.split(' ')[0]);
-  url.searchParams.append('zoomType', 'fullscreen');
-  url.searchParams.append('modelYear', `${year}`);
-  url.searchParams.append('angle', `${angle || '01'}`);
-  
-  return `${url}`;
-};
+    searchParams.set(type, value);
+    
+    const newPathname = `${window.location.pathname}?${searchParams.toString()}`
+    return newPathname;
+    
+}
