@@ -1,7 +1,7 @@
 import { mockCars } from '@/cars';
-import { CarProps } from '@/types';
-
-export async function fetchCars() {
+import { CarProps, FilterProps } from '@/types';
+import 
+export async function fetchCars(filters: FilterProps)  {
   // Simulează delay pentru a părea real
   await new Promise(resolve => setTimeout(resolve, 500));
   return mockCars;
