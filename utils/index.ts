@@ -1,49 +1,30 @@
-import { mockCars } from '@/cars';
 import { CarProps, FilterProps } from '@/types';
 
 export async function fetchCars(filters: FilterProps) {
   const { manufacturer, year, model, limit, fuel } = filters;
   
-  await new Promise(resolve => setTimeout(resolve, 500));
+  // Construiește URL-ul cu parametrii
+  const params = new URLSearchParams();
+  if (manufacturer && manufacturer !== '') params.append('manufacturer', manufacturer);
+  if (year && year !== 2025) params.append('year', year.toString());
+  if (model && model !== '') params.append('model', model);
+  if (limit && limit > 0) params.append('limit', limit.toString());
+  if (fuel && fuel !== '') params.append('fuel', fuel);
   
-  let filteredCars = mockCars.filter(car => {
-    if (manufacturer && manufacturer !== '') {
-      if (!car.make.toLowerCase().includes(manufacturer.toLowerCase())) {
-        return false;
-      }
+  try {
+    const response = await fetch(`http://localhost:3001/api/cars?${params.toString()}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    if (model && model !== '') {
-      if (!car.model.toLowerCase().includes(model.toLowerCase())) {
-        return false;
-      }
-    }
-    
-    if (year && year !== 2025) { // 2025 este valoarea default
-      if (car.year !== year) {
-        return false;
-      }
-    }
-    
-    if (fuel && fuel !== '') {
-      if (fuel.toLowerCase() === 'gas' && car.fuel_type !== 'gas') {
-        return false;
-      }
-      if (fuel.toLowerCase() === 'electricity' && car.fuel_type !== 'electricity') {
-        return false;
-      }
-    }
-    
-    return true;
-  });
-  
-  if (limit && limit > 0) {
-    filteredCars = filteredCars.slice(0, limit);
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error fetching cars:', error);
+    return [];
   }
-  
-  return filteredCars;
 }
-
 export const calculateCarRent = (city_mpg: number, year: number) => {
   const basePricePerDay = 50; // Base rental price per day in dollars
   const mileageFactor = 0.1; // Additional rate per mile driven
