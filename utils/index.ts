@@ -1,7 +1,7 @@
 import { CarProps, FilterProps } from '@/types';
 
 export async function fetchCars(filters: FilterProps) {
-  const { manufacturer, year, model, limit, fuel } = filters;
+  const { manufacturer, year, model, limit, fuel_type } = filters;
   
   // Construiește URL-ul cu parametrii
   const params = new URLSearchParams();
@@ -9,7 +9,7 @@ export async function fetchCars(filters: FilterProps) {
   if (year && year !== 2025) params.append('year', year.toString());
   if (model && model !== '') params.append('model', model);
   if (limit && limit > 0) params.append('limit', limit.toString());
-  if (fuel && fuel !== '') params.append('fuel', fuel);
+  if (fuel_type && fuel_type !== '') params.append('fuel', fuel_type);
   
   try {
     const response = await fetch(`http://localhost:3001/api/cars?${params.toString()}`);
