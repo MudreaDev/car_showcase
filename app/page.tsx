@@ -13,8 +13,8 @@ const [manufacturer, setManufacturer] = useState("");
 const [model, setModel] = useState("");
 
 const [fuel, setFuel] = useState("");
-const [year, setYear] = useState(2022);
-const [limit, setLimit] = useState(10);
+const [year, setYear] = useState(2025);
+const [limit, setLimit] = useState(50);
 
 const getCars = async () => {
 setLoading(true);
@@ -88,7 +88,7 @@ getCars();
             )}
             <ShowMore 
             pageNumber={limit / 10}
-            isNext={limit> allCars.length}
+            isNext={limit <= allCars.length}
             setLimit={setLimit}
             />
           </section>
